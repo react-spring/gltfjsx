@@ -266,6 +266,29 @@ gltfLoader.load(url, (gltf) => {
 })
 ```
 
+<details>
+  <summary>Where `optionalConfig` can take values config options among these </summary>
+
+```js
+optionalConfig = {
+  debug: true, 
+  // User content
+  keepnames: true, 
+  keepgroups: true, 
+  meta: true, 
+  header: 'Header',
+  // User content
+  types: true, 
+  shadows: true,
+  exportdefault: true, 
+  precision: 3,
+  instance: false,
+  instanceall: false
+  // draco 
+}
+```
+</details>
+
 ## Using the parser stand-alone for scenes (object3d's)
 
 ```jsx
