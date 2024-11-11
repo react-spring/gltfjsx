@@ -33,6 +33,7 @@ const cli = meow(
       --resolution, -R  Resolution for texture resizing (default: 1024)
       --keepmeshes, -j  Do not join compatible meshes
       --keepmaterials, -M Do not palette join materials
+      --keepattributes, Whether to keep unused vertex attributes, such as UVs without an assigned texture
       --format, -f      Texture format (default: "webp")
       --simplify, -S    Mesh simplification (default: false)
         --ratio         Simplifier ratio (default: 0)
@@ -63,6 +64,7 @@ const cli = meow(
       simplify: { type: 'boolean', shortFlag: 'S', default: false },
       keepmeshes: { type: 'boolean', shortFlag: 'j', default: false },
       keepmaterials: { type: 'boolean', shortFlag: 'M', default: false },
+      keepattributes: { type: 'boolean', default: false },
       format: { type: 'string', shortFlag: 'f', default: 'webp' },
       exportdefault: { type: 'boolean', shortFlag: 'E' },
       ratio: { type: 'number', default: 0.75 },

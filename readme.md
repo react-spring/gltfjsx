@@ -1,13 +1,12 @@
-https://user-images.githubusercontent.com/2223602/126318148-99da7ed6-a578-48dd-bdd2-21056dbad003.mp4
-
-<br />
-<br/>
+# GLTFJSX
 
 [![Version](https://img.shields.io/npm/v/gltfjsx?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/gltfjsx) [![Discord Shield](https://img.shields.io/discord/740090768164651008?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff)](https://discord.gg/ZZjjNvJ)
 
+<https://user-images.githubusercontent.com/2223602/126318148-99da7ed6-a578-48dd-bdd2-21056dbad003.mp4>
+
 A small command-line tool that turns GLTF assets into declarative and re-usable [react-three-fiber](https://github.com/pmndrs/react-three-fiber) JSX components.
 
-### The GLTF workflow on the web is not ideal ...
+## The GLTF workflow on the web is not ideal
 
 - GLTF is thrown whole into the scene which prevents re-use, in threejs objects can only be mounted once
 - Contents can only be found by traversal which is cumbersome and slow
@@ -47,6 +46,7 @@ Options
     --resolution, -R  Resolution for texture resizing (default: 1024)
     --keepmeshes, -j  Do not join compatible meshes
     --keepmaterials, -M Do not palette join materials
+    --keepattributes, Whether to keep unused vertex attributes, such as UVs without an assigned texture (default: false)
     --format, -f      Texture format (default: "webp")
     --simplify, -S    Mesh simplification (default: false)
       --ratio         Simplifier ratio (default: 0)
@@ -147,11 +147,11 @@ Add events:
 
 ## Features
 
-#### ⚡️ Draco and meshopt compression ootb
+### ⚡️ Draco and meshopt compression ootb
 
 You don't need to do anything if your models are draco compressed, since `useGLTF` defaults to a [draco CDN](https://www.gstatic.com/draco/v1/decoders/). By adding the `--draco` flag you can refer to [local binaries](https://github.com/mrdoob/three.js/tree/dev/examples/js/libs/draco/gltf) which must reside in your /public folder.
 
-#### ⚡️ Preload your assets for faster response
+### ⚡️ Preload your assets for faster response
 
 The asset will be preloaded by default, this makes it quicker to load and reduces time-to-paint. Remove the preloader if you don't need it.
 
@@ -159,13 +159,13 @@ The asset will be preloaded by default, this makes it quicker to load and reduce
 useGLTF.preload('/model.gltf')
 ```
 
-#### ⚡️ Auto-transform (compression, resize)
+### ⚡️ Auto-transform (compression, resize)
 
-With the `--transform` flag it creates a binary-packed, draco-compressed, texture-resized (1024x1024), webp compressed, deduped, instanced and pruned *.glb ready to be consumed on a web site. It uses [glTF-Transform](https://github.com/donmccurdy/glTF-Transform). This can reduce the size of an asset by 70%-90%.
+With the `--transform` flag it creates a binary-packed, draco-compressed, texture-resized (1024x1024), webp compressed, deduped, instanced and pruned `*.glb` ready to be consumed on a web site. It uses [glTF-Transform](https://github.com/donmccurdy/glTF-Transform). This can reduce the size of an asset by 70%-90%.
 
 It will not alter the original but create a copy and append `[modelname]-transformed.glb`.
 
-#### ⚡️ Type-safety
+### ⚡️ Type-safety
 
 Add the `--types` flag and your GLTF will be typesafe.
 
@@ -179,7 +179,7 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials } = useGLTF<GLTFResult>('/model.gltf')
 ```
 
-#### ⚡️ Easier access to animations
+### ⚡️ Easier access to animations
 
 If your GLTF contains animations it will add [drei's](https://github.com/pmndrs/drei) `useAnimations` hook, which extracts all clips and prepares them as actions:
 
@@ -205,7 +205,7 @@ useEffect(() => {
 }, [name])
 ```
 
-#### ⚡️ Auto-instancing
+### ⚡️ Auto-instancing
 
 Use the `--instance` flag and it will look for similar geometry and create instances of them. Look into [drei/Merged](https://github.com/pmndrs/drei#instances) to understand how it works. It does not matter if you instanced the model previously in Blender, it creates instances for each mesh that has a specific geometry and/or material.
 
