@@ -503,9 +503,11 @@ ${parseExtras(gltf.parser.json.asset && gltf.parser.json.asset.extras)}*/`
             hasAnimations ? `const group = ${options.types ? 'React.useRef<THREE.Group>()' : 'React.useRef()'};` : ''
           } ${
             !options.instanceall
-              ? `const { ${!hasPrimitives ? `nodes, materials` : 'scene'} ${hasAnimations ? ', animations' : ''}} = useGLTF('${url}'${
-                  options.draco ? `, ${JSON.stringify(options.draco)}` : ''
-                })${!hasPrimitives && options.types ? ' as GLTFResult' : ''}${
+              ? `const { ${!hasPrimitives ? `nodes, materials` : 'scene'} ${
+                  hasAnimations ? ', animations' : ''
+                }} = useGLTF('${url}'${options.draco ? `, ${JSON.stringify(options.draco)}` : ''})${
+                  !hasPrimitives && options.types ? ' as GLTFResult' : ''
+                }${
                   hasPrimitives
                     ? `\nconst clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
                 const { nodes, materials } = useGraph(clone) ${options.types ? ' as GLTFResult' : ''}`

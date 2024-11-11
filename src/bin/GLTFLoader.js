@@ -1164,18 +1164,18 @@ function addMorphTargets(geometry, targets, parser) {
     }
   }
 
-  return Promise.all([Promise.all(pendingPositionAccessors), Promise.all(pendingNormalAccessors)]).then(function (
-    accessors
-  ) {
-    var morphPositions = accessors[0]
-    var morphNormals = accessors[1]
+  return Promise.all([Promise.all(pendingPositionAccessors), Promise.all(pendingNormalAccessors)]).then(
+    function (accessors) {
+      var morphPositions = accessors[0]
+      var morphNormals = accessors[1]
 
-    if (hasMorphPosition) geometry.morphAttributes.position = morphPositions
-    if (hasMorphNormal) geometry.morphAttributes.normal = morphNormals
-    geometry.morphTargetsRelative = true
+      if (hasMorphPosition) geometry.morphAttributes.position = morphPositions
+      if (hasMorphNormal) geometry.morphAttributes.normal = morphNormals
+      geometry.morphTargetsRelative = true
 
-    return geometry
-  })
+      return geometry
+    }
+  )
 }
 
 function createPrimitiveKey(primitiveDef) {
@@ -2211,7 +2211,7 @@ GLTFParser.prototype.loadMesh = function (meshIndex) {
         throw new Error('THREE.GLTFLoader: Primitive mode unsupported: ' + primitive.mode)
       }
 
-      if (meshDef.hasMorphAttributes)  {
+      if (meshDef.hasMorphAttributes) {
         // Just flag the mesh, so that parser.js can link morphTarget dictionaries and influences
         // This prevented a crash relating to morphTarget definitions
         mesh.morphTargetDictionary = true

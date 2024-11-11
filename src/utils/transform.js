@@ -58,8 +58,8 @@ async function transform(file, output, config = {}) {
   }
 
   functions.push(
-	  // Weld vertices
-	  weld(),
+    // Weld vertices
+    weld()
   )
 
   if (config.simplify) {
