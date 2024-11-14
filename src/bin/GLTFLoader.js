@@ -523,19 +523,19 @@ GLTFTextureBasisUExtension.prototype.loadTexture = function (textureIndex) {
  */
 class GLTFMeshGpuInstancing {
   constructor(parser) {
-    this.name = EXTENSIONS.EXT_MESH_GPU_INSTANCING
-    this.parser = parser
+    this.name = EXTENSIONS.EXT_MESH_GPU_INSTANCING;
+    this.parser = parser;
   }
 
   createNodeMesh(nodeIndex) {
-    const json = this.parser.json
-    const nodeDef = json.nodes[nodeIndex]
+    const json = this.parser.json;
+    const nodeDef = json.nodes[nodeIndex];
 
     if (!nodeDef.extensions || !nodeDef.extensions[this.name] || nodeDef.mesh === undefined) {
-      return null
+      return null;
     }
 
-    const meshDef = json.meshes[nodeDef.mesh]
+    const meshDef = json.meshes[nodeDef.mesh];
 
     // No Points or Lines + Instancing support yet
     for (const primitive of meshDef.primitives) {
@@ -545,75 +545,91 @@ class GLTFMeshGpuInstancing {
         primitive.mode !== WEBGL_CONSTANTS.TRIANGLE_FAN &&
         primitive.mode !== undefined
       ) {
-        return null
+        return null;
       }
     }
 
-    const extensionDef = nodeDef.extensions[this.name]
-    const attributesDef = extensionDef.attributes
-    // @TODO: Can we support InstancedMesh + SkinnedMesh?
-    const pending = []
-    const attributes = {}
+    const extensionDef = nodeDef.extensions[this.name];
+    const attributesDef = extensionDef.attributes;
+    const pending = [];
+    const attributes = {};
 
     for (const key in attributesDef) {
       pending.push(
         this.parser.getDependency('accessor', attributesDef[key]).then((accessor) => {
-          attributes[key] = accessor
-          return attributes[key]
+          attributes[key] = accessor;
+          return attributes[key];
         })
-      )
+      );
     }
+
     if (pending.length < 1) {
-      return null
+      return null;
     }
-    pending.push(this.parser.createNodeMesh(nodeIndex))
+
+    pending.push(this.parser.createNodeMesh(nodeIndex));
 
     return Promise.all(pending).then((results) => {
-      const nodeObject = results.pop()
-      const meshes = nodeObject.isGroup ? nodeObject.children : [nodeObject]
-      const count = results[0].count // All attribute counts should be same
+      const nodeObject = results.pop();
+      const meshes = nodeObject.isGroup ? nodeObject.children : [nodeObject];
+      const count = results[0].count; // All attribute counts should be same
 
-      const instancedMeshes = []
+      const instancedMeshes = [];
       for (const mesh of meshes) {
         // Temporal variables
-        const m = new THREE.Matrix4()
-        const p = new THREE.Vector3()
-        const q = new THREE.Quaternion()
-        const s = new THREE.Vector3(1, 1, 1)
-        const instancedMesh = new THREE.InstancedMesh(mesh.geometry, mesh.material, count)
+        const m = new THREE.Matrix4();
+        const p = new THREE.Vector3();
+        const q = new THREE.Quaternion();
+        const s = new THREE.Vector3(1, 1, 1);
+        const instancedMesh = new THREE.InstancedMesh(mesh.geometry, mesh.material, count);
 
         for (let i = 0; i < count; i++) {
           if (attributes.TRANSLATION) {
-            p.fromBufferAttribute(attributes.TRANSLATION, i)
+            p.fromBufferAttribute(attributes.TRANSLATION, i);
           }
           if (attributes.ROTATION) {
-            q.fromBufferAttribute(attributes.ROTATION, i)
+            q.fromBufferAttribute(attributes.ROTATION, i);
           }
           if (attributes.SCALE) {
-            s.fromBufferAttribute(attributes.SCALE, i)
+            s.fromBufferAttribute(attributes.SCALE, i);
           }
-          instancedMesh.setMatrixAt(i, m.compose(p, q, s))
+          instancedMesh.setMatrixAt(i, m.compose(p, q, s));
         }
 
         // Add instance attributes to the geometry, excluding TRS.
         for (const attributeName in attributes) {
           if (attributeName !== 'TRANSLATION' && attributeName !== 'ROTATION' && attributeName !== 'SCALE') {
-            mesh.geometry.setAttribute(attributeName, attributes[attributeName])
+            mesh.geometry.setAttribute(attributeName, attributes[attributeName]);
           }
         }
 
         // Just in case
-        THREE.Object3D.prototype.copy.call(instancedMesh, mesh)
-        this.parser.assignFinalMaterial(instancedMesh)
-        instancedMeshes.push(instancedMesh)
+        THREE.Object3D.prototype.copy.call(instancedMesh, mesh);
+        this.parser.assignFinalMaterial(instancedMesh);
+
+        if (mesh.isSkinnedMesh) {
+          // Handle skinned mesh
+          instancedMesh.isSkinnedMesh = true;
+          instancedMesh.bindMode = mesh.bindMode;
+          instancedMesh.bindMatrix.copy(mesh.bindMatrix);
+          instancedMesh.bindMatrixInverse.copy(mesh.bindMatrixInverse);
+
+          if (mesh.skeleton) {
+            instancedMesh.skeleton = mesh.skeleton.clone();
+          }
+        }
+
+        instancedMeshes.push(instancedMesh);
       }
+
       if (nodeObject.isGroup) {
-        nodeObject.clear()
-        nodeObject.add(...instancedMeshes)
-        return nodeObject
+        nodeObject.clear();
+        nodeObject.add(...instancedMeshes);
+        return nodeObject;
       }
-      return instancedMeshes[0]
-    })
+
+      return instancedMeshes[0];
+    });
   }
 }
 
