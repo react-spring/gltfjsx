@@ -127,7 +127,7 @@ export class GLTFLoader extends THREE.Loader {
     if (typeof data === 'string') {
       content = data
     } else {
-      var magic = THREE.LoaderUtils.decodeText(new Uint8Array(data, 0, 4))
+      var magic = new TextDecoder().decode(new Uint8Array(data, 0, 4))
 
       if (magic === BINARY_EXTENSION_HEADER_MAGIC) {
         try {
@@ -139,7 +139,7 @@ export class GLTFLoader extends THREE.Loader {
 
         content = extensions[EXTENSIONS.KHR_BINARY_GLTF].content
       } else {
-        content = THREE.LoaderUtils.decodeText(new Uint8Array(data))
+        content = new TextDecoder().decode(new Uint8Array(data))
       }
     }
 
@@ -630,7 +630,7 @@ function GLTFBinaryExtension(data) {
   var headerView = new DataView(data, 0, BINARY_EXTENSION_HEADER_LENGTH)
 
   this.header = {
-    magic: THREE.LoaderUtils.decodeText(new Uint8Array(data.slice(0, 4))),
+    magic: new TextDecoder().decode(new Uint8Array(data.slice(0, 4))),
     version: headerView.getUint32(4, true),
     length: headerView.getUint32(8, true),
   }
@@ -653,7 +653,7 @@ function GLTFBinaryExtension(data) {
 
     if (chunkType === BINARY_EXTENSION_CHUNK_TYPES.JSON) {
       var contentArray = new Uint8Array(data, BINARY_EXTENSION_HEADER_LENGTH + chunkIndex, chunkLength)
-      this.content = THREE.LoaderUtils.decodeText(contentArray)
+      this.content = new TextDecoder().decode(contentArray)
     } else if (chunkType === BINARY_EXTENSION_CHUNK_TYPES.BIN) {
       var byteOffset = BINARY_EXTENSION_HEADER_LENGTH + chunkIndex
       this.body = data.slice(byteOffset, byteOffset + chunkLength)
