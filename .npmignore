@@ -1,1 +1,13 @@
-example/
+.github
+.vscode
+.yarn
+.eslintcache
+.ncurc.cjs
+.prettierignore
+.yarnrc.yml
+src
+eslint.config.*
+logo.svg
+tsconfig.*
+tsup.config.*
+yarn.lock
