@@ -7,9 +7,27 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 .DS_Store
-.vscode
 .docz/
 package-lock.json
 coverage/
 .idea
 yarn-error.log
+tmp*
+
+# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+*.tsbuildinfo
+/.eslintcache
+New.tsx
+
+test/models/*/Old*
+
+# local testing
+test/models/a6
+test/r3f/GenA6*

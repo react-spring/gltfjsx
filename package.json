@@ -1,12 +1,23 @@
 {
   "name": "gltfjsx",
-  "version": "6.5.2",
+  "version": "7.0.0",
   "description": "GLTF to JSX converter",
+  "prettier": "@alienfast/prettier-config",
   "scripts": {
-    "build": "rollup -c",
-    "test": "node src/test"
+    "build": "tsup-node && chmod +x dist/cli.js",
+    "build:ide": "echo 'tsc -b' && tsc -b",
+    "lint:fix": "eslint . --cache --fix",
+    "test": "vitest",
+    "release": "yarn auto shipit"
   },
   "type": "module",
+  "bin": "./dist/cli.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "keywords": [
     "gltf",
     "jsx",
@@ -29,75 +40,72 @@
     "url": "https://github.com/pmndrs/gltfjsx/issues"
   },
   "homepage": "https://github.com/pmndrs/gltfjsx#readme",
-  "bin": "./cli.js",
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
   "engines": {
     "node": ">=16"
   },
   "dependencies": {
-    "@gltf-transform/core": "4.1.0",
-    "@gltf-transform/extensions": "4.1.0",
-    "@gltf-transform/functions": "4.1.0",
-    "@node-loader/babel": "^2.0.1",
+    "@gltf-transform/core": "4.1.1",
+    "@gltf-transform/extensions": "4.1.1",
+    "@gltf-transform/functions": "4.1.1",
     "draco3dgltf": "^1.5.7",
     "is-var-name": "^2.0.0",
     "keyframe-resample": "^0.1.0",
-    "meow": "^12.1.1",
+    "meow": "^13.2.0",
     "meshoptimizer": "^0.22.0",
-    "prettier": "3.1.1",
-    "read-pkg-up": "^10.1.0",
-    "three": "0.159.0",
-    "three-stdlib": "^2.28.7"
+    "node-three-gltf": "2.0.1",
+    "prettier": "3.4.2",
+    "read-pkg-up": "^11.0.0",
+    "sharp": "^0.33.5",
+    "three": "0.173.0",
+    "three-stdlib": "^2.35.13",
+    "ts-morph": "^25.0.1"
   },
   "optionalDependencies": {
-    "jsdom": "^24.1.0",
-    "jsdom-global": "^3.0.2",
-    "libvips": "0.0.2",
-    "sharp": "^0.33.5"
-  },
-  "resolutions": {
-    "sharp": "<0.33.0",
-    "@gltf-transform/core": "4.0.8",
-    "@gltf-transform/extensions": "4.0.8",
-    "@gltf-transform/functions": "4.0.8"
+    "libvips": "^0.0.2"
   },
   "devDependencies": {
-    "@babel/core": "7.23.6",
-    "@babel/plugin-proposal-class-properties": "^7.16.0",
-    "@babel/plugin-transform-modules-commonjs": "7.23.3",
-    "@babel/plugin-transform-parameters": "7.23.3",
-    "@babel/plugin-transform-runtime": "7.23.6",
-    "@babel/plugin-transform-template-literals": "7.23.3",
-    "@babel/preset-env": "7.23.6",
-    "@babel/preset-react": "7.23.3",
-    "@babel/preset-typescript": "^7.23.3",
-    "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "chalk": "^5.3.0",
-    "fast-glob": "^3.3.2",
-    "fs-extra": "^11.2.0",
-    "lint-staged": "^13.2.0",
-    "rollup": "^4.9.1",
-    "rollup-plugin-size-snapshot": "^0.12.0",
-    "rollup-plugin-terser": "^7.0.2"
-  },
-  "prettier": {
-    "semi": false,
-    "trailingComma": "es5",
-    "singleQuote": true,
-    "jsxBracketSameLine": true,
-    "tabWidth": 2,
-    "printWidth": 120
+    "@alienfast/eslint-config": "^5.2.6",
+    "@alienfast/prettier-config": "^1.0.2",
+    "@alienfast/tsconfig": "^1.0.4",
+    "@auto-it/all-contributors": "^11.3.0",
+    "@auto-it/first-time-contributor": "^11.3.0",
+    "@auto-it/released": "^11.3.0",
+    "@types/draco3dgltf": "^1.4.3",
+    "@types/node": "^22.13.1",
+    "@types/three": "^0.173.0",
+    "auto": "^11.3.0",
+    "chalk": "^5.4.1",
+    "eslint": "^9.20.0",
+    "fast-glob": "^3.3.3",
+    "fs-extra": "^11.3.0",
+    "lint-staged": "^15.4.3",
+    "prettier": "^3.4.2",
+    "tsup": "^8.3.6",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.23.0",
+    "vitest": "^3.0.5"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "prettier --write"
+    "*.{json,md,gql}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.{ts,tsx,js}": [
+      "eslint . --cache --ext .js,.ts,.tsx --fix",
+      "git add"
     ]
   },
   "collective": {
     "type": "opencollective",
     "url": "https://opencollective.com/react-three-fiber"
   },
-  "packageManager": "yarn@4.4.0+sha256.5f228cb28f2edb97d8c3b667fb7b2fdcf06c46798e25ea889dad9e0b4bc2e2c1"
+  "packageManager": "yarn@4.6.0",
+  "auto": {
+    "plugins": [
+      "npm",
+      "all-contributors",
+      "first-time-contributor",
+      "released"
+    ]
+  }
 }
